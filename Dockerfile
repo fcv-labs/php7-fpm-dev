@@ -1,5 +1,5 @@
 # from https://www.drupal.org/requirements/php#drupalversions
-FROM php:7.0-fpm
+FROM php:7.1-fpm
 
 # install the PHP extensions we need
 RUN set -ex \
@@ -22,18 +22,19 @@ RUN set -ex \
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
-WORKDIR $HOME
+## Install Git
+RUN apt-get update -y
+RUN apt-get upgrade -y
+RUN apt-get install git -y
 
-# installing composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-RUN rm composer-setup.php
+# Install Mysql Client package for Drush compatibility.
+RUN apt-get install mysql-client -y
 
-# installing Drupal Console
-RUN php -r "copy('https://drupalconsole.com/installer', 'drupal.phar');"
-RUN mv drupal.phar /usr/local/bin/drupal
-RUN chmod +x /usr/local/bin/drupal
-RUN drupal init
-RUN drupal self-update
+# Install text editor.
+RUN apt-get install vim -y
 
 WORKDIR /var/www/html
+
+# Add lines to .bashrc for CLI improvments.
+RUN echo "export PATH=$PATH:/code/vendor/bin" >> ~/.bashrc
+RUN echo "alias ll='ls -la'" >> ~/.bashrc
