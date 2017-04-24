@@ -33,7 +33,7 @@ RUN apt-get install mysql-client -y
 # Install text editor.
 RUN apt-get install vim -y
 
-WORKDIR /var/www/html
+WORKDIR /code
 
 # Add lines to .bashrc for CLI improvments.
 RUN echo "export PATH=$PATH:/code/vendor/bin" >> ~/.bashrc
